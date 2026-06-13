@@ -8,6 +8,7 @@
   --green: #3ec77a;
   --yellow: #e7b84b;
   --red: #e0644f;
+  --purple: #b08af0;
   --text: #e7ecf3;
   --text-dim: #8b96a8;
 
@@ -98,6 +99,97 @@ html, body, #root {
   padding: 10px 12px;
 }
 
+.holdings-toggle {
+  margin-bottom: 12px;
+}
+
+.extend-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin: 10px 0 16px;
+  cursor: pointer;
+}
+
+.extend-toggle input {
+  accent-color: var(--purple);
+}
+
+.holdings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.holdings-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.holdings-field input {
+  width: 70px;
+  text-align: right;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  padding: 4px 6px;
+}
+
+.ref-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.ref-table h2 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  margin: 0 0 4px;
+}
+
+.ref-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin: 0 0 10px;
+}
+
+.ref-row {
+  display: grid;
+  grid-template-columns: 50px 40px 1fr 50px auto;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+}
+
+.ref-row:first-of-type {
+  border-top: none;
+}
+
+.ref-row .ticker {
+  font-size: 0.85rem;
+}
+
+.ref-pct, .ref-cad, .ref-shares {
+  color: var(--text-dim);
+}
+
 .buy-note {
   font-size: 0.72rem;
   color: var(--text-dim);
@@ -149,6 +241,7 @@ html, body, #root {
 .card.zone-yellow { border-left-color: var(--yellow); }
 .card.zone-red { border-left-color: var(--red); }
 .card.zone-unknown { border-left-color: var(--text-dim); }
+.card.zone-purple { border-left-color: var(--purple); }
 
 .card-top {
   display: flex;
@@ -167,6 +260,7 @@ html, body, #root {
 .ticker.zone-yellow { color: var(--yellow); }
 .ticker.zone-red { color: var(--red); }
 .ticker.zone-unknown { color: var(--text-dim); }
+.ticker.zone-purple { color: var(--purple); }
 
 .name {
   font-size: 0.78rem;
@@ -207,6 +301,7 @@ html, body, #root {
 .zone-badge.zone-yellow { background: rgba(231, 184, 75, 0.15); color: var(--yellow); }
 .zone-badge.zone-red { background: rgba(224, 100, 79, 0.15); color: var(--red); }
 .zone-badge.zone-unknown { background: rgba(139, 150, 168, 0.15); color: var(--text-dim); }
+.zone-badge.zone-purple { background: rgba(176, 138, 240, 0.15); color: var(--purple); }
 
 .range-bar {
   position: relative;
