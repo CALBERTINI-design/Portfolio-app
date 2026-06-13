@@ -42,6 +42,12 @@ export default function BuyMode({ quotes }) {
         <button className="refresh-btn" onClick={handleCalculate}>Calculate</button>
       </div>
 
+      {portfolioCAD > 0 && (
+        <div className="portfolio-value-row">
+          Portfolio value (auto, CAD): <strong>${portfolioCAD.toFixed(2)}</strong>
+        </div>
+      )}
+
       <button className="tab-btn holdings-toggle" onClick={() => setShowHoldings((s) => !s)}>
         {showHoldings ? 'Hide' : 'Add'} shares held per holding (optional — auto-fills portfolio value, flags 🟣 at-target)
       </button>

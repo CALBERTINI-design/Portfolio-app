@@ -88,6 +88,12 @@ html, body, #root {
   margin-bottom: 16px;
 }
 
+.portfolio-value-row {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--teal);
+  margin-bottom: 12px;
+}
+
 .buy-input {
   flex: 1;
   font-family: var(--font-mono);
