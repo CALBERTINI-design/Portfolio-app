@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { HOLDINGS } from './config/portfolio'
 import HoldingCard from './components/HoldingCard'
 import BuyMode from './components/BuyMode'
+import ThesisMode from './components/ThesisMode'
 
 export default function App() {
   const [quotes, setQuotes] = useState({})
@@ -46,6 +47,9 @@ export default function App() {
           <button className={`tab-btn ${mode === 'buy' ? 'active' : ''}`} onClick={() => setMode('buy')}>
             Buy Mode
           </button>
+          <button className={`tab-btn ${mode === 'thesis' ? 'active' : ''}`} onClick={() => setMode('thesis')}>
+            Thesis Review
+          </button>
         </div>
         <button className="refresh-btn" onClick={fetchPrices} disabled={loading}>
           {loading ? 'Refreshing…' : 'Refresh prices'}
@@ -69,8 +73,10 @@ export default function App() {
             placing any order in CIBC Investor Edge.
           </div>
         </>
-      ) : (
+      ) : mode === 'buy' ? (
         <BuyMode quotes={quotes} />
+      ) : (
+        <ThesisMode />
       )}
     </>
   )
