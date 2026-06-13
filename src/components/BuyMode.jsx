@@ -4,13 +4,23 @@ import { computeBuyPlan } from '../config/allocate'
 
 export default function BuyMode({ quotes }) {
   const [cash, setCash] = useState('')
-  const [portfolioValue, setPortfolioValue] = useState('')
   const [showHoldings, setShowHoldings] = useState(false)
-  const [currentValues, setCurrentValues] = useState({})
+  const [currentShares, setCurrentShares] = useState({})
   const [plan, setPlan] = useState(null)
 
   const cashCAD = parseFloat(cash) || 0
-  const portfolioCAD = parseFloat(portfolioValue) || 0
+
+  const currentValuesCAD = {}
+  let portfolioCAD = 0
+  for (const h of HOLDINGS) {
+    const shares = parseFloat(currentShares[h.ticker]) || 0
+    const quote = quotes[h.ticker]
+    const priceCAD = quote?.price != null ? quote.price * FX_USD_TO_CAD : 0
+    const valueCAD = shares * priceCAD
+    currentValuesCAD[h.ticker] = valueCAD
+    portfolioCAD += valueCAD
+  }
+
   const totalCAD = portfolioCAD + cashCAD
 
   const handleCalculate = () => {
@@ -29,19 +39,11 @@ export default function BuyMode({ quotes }) {
           onChange={(e) => setCash(e.target.value)}
           className="buy-input"
         />
-        <input
-          type="number"
-          inputMode="decimal"
-          placeholder="Current portfolio value (CAD)"
-          value={portfolioValue}
-          onChange={(e) => setPortfolioValue(e.target.value)}
-          className="buy-input"
-        />
         <button className="refresh-btn" onClick={handleCalculate}>Calculate</button>
       </div>
 
       <button className="tab-btn holdings-toggle" onClick={() => setShowHoldings((s) => !s)}>
-        {showHoldings ? 'Hide' : 'Add'} current value per holding (optional — flags 🟣 at-target)
+        {showHoldings ? 'Hide' : 'Add'} shares held per holding (optional — auto-fills portfolio value, flags 🟣 at-target)
       </button>
 
       {showHoldings && (
@@ -51,11 +53,11 @@ export default function BuyMode({ quotes }) {
               <span>{h.ticker}</span>
               <input
                 type="number"
-                inputMode="decimal"
+                inputMode="numeric"
                 min="0"
-                placeholder="$0"
-                value={currentValues[h.ticker] ?? ''}
-                onChange={(e) => setCurrentValues((s) => ({ ...s, [h.ticker]: e.target.value }))}
+                placeholder="0 sh"
+                value={currentShares[h.ticker] ?? ''}
+                onChange={(e) => setCurrentShares((s) => ({ ...s, [h.ticker]: e.target.value }))}
               />
             </label>
           ))}
@@ -67,7 +69,7 @@ export default function BuyMode({ quotes }) {
           <h2>Target Allocation Reference</h2>
           <p className="ref-sub">
             Target $ at each weight on your total of ${totalCAD.toFixed(2)} CAD
-            (${portfolioCAD.toFixed(2)} held + ${cashCAD.toFixed(2)} this round) —
+            (${portfolioCAD.toFixed(2)} held{showHoldings ? ', auto-calculated from shares × live price' : ''} + ${cashCAD.toFixed(2)} this round) —
             shares shown are this round's worth at today's prices, regardless of zone.
           </p>
           {HOLDINGS.filter((h) => (h.targetWeightPct ?? 0) > 0).map((h) => {
@@ -78,7 +80,7 @@ export default function BuyMode({ quotes }) {
             const cashTargetCAD = cashCAD * h.targetWeightPct
             const priceCAD = price != null ? price * FX_USD_TO_CAD : null
             const sharesNeeded = priceCAD != null ? Math.floor(cashTargetCAD / priceCAD) : null
-            const currentCAD = parseFloat(currentValues[h.ticker]) || 0
+            const currentCAD = currentValuesCAD[h.ticker] ?? 0
             const atTarget = targetCAD > 0 && currentCAD >= targetCAD
             return (
               <div key={h.ticker} className="ref-row">
@@ -98,7 +100,7 @@ export default function BuyMode({ quotes }) {
         <div className="cards">
           {plan.rows.map((row) => {
             const targetCAD = totalCAD * (HOLDINGS.find((h) => h.ticker === row.ticker)?.targetWeightPct ?? 0)
-            const currentCAD = parseFloat(currentValues[row.ticker]) || 0
+            const currentCAD = currentValuesCAD[row.ticker] ?? 0
             const atTarget = targetCAD > 0 && currentCAD >= targetCAD
             const cardColor = atTarget && row.zone.color !== 'green' ? 'purple' : row.zone.color
             return (
