@@ -343,6 +343,16 @@ html, body, #root {
   margin-top: 6px;
 }
 
+.momentum-note {
+  font-size: 0.7rem;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.momentum-note.support { color: var(--green); }
+.momentum-note.stretch { color: var(--yellow); }
+
 .guardrails {
   margin-top: 24px;
   padding: 12px 14px;

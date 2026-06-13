@@ -72,7 +72,7 @@ export default function BuyMode({ quotes }) {
           {HOLDINGS.filter((h) => (h.targetWeightPct ?? 0) > 0).map((h) => {
             const quote = quotes[h.ticker]
             const price = quote?.price ?? null
-            const zone = getZone(price, h)
+            const zone = getZone(price, h, quote)
             const targetCAD = parseFloat(cash) * h.targetWeightPct
             const priceCAD = price != null ? price * FX_USD_TO_CAD : null
             const sharesNeeded = priceCAD != null ? Math.floor(targetCAD / priceCAD) : null

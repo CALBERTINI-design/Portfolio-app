@@ -21,7 +21,7 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentShares = {}, extendBe
   const withInfo = HOLDINGS.map((holding) => {
     const quote = quotes[holding.ticker]
     const price = quote?.price ?? null
-    const zone = getZone(price, holding)
+    const zone = getZone(price, holding, quote)
     const priceCAD = price != null ? price * fx : null
     const sharesHeld = currentShares[holding.ticker] ?? 0
     const currentValueCAD = priceCAD != null ? sharesHeld * priceCAD : 0
