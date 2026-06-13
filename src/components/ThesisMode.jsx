@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { HOLDINGS } from '../config/portfolio'
 
 const HEALTH_COLOR = {
   strengthening: 'green',
@@ -55,6 +56,9 @@ export default function ThesisMode() {
                 <div key={layer.layer} className={`card zone-${color}`}>
                   <div className="card-top">
                     <span className={`ticker zone-${color}`}>{layer.layer}</span>
+                    <span className="name">
+                      {HOLDINGS.filter((h) => h.layer === layer.layer).map((h) => h.ticker).join(', ')}
+                    </span>
                     <span className={`zone-badge zone-${color}`}>{layer.health}</span>
                   </div>
                   <p className="thesis-summary">{layer.summary}</p>

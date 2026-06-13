@@ -89,8 +89,7 @@ html, body, #root {
 }
 
 .at-target-trim {
-  outline: 2px solid var(--purple);
-  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--purple);
 }
 
 .portfolio-value-row {
