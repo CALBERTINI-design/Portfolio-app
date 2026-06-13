@@ -4,11 +4,17 @@ import { computeBuyPlan } from '../config/allocate'
 
 export default function BuyMode({ quotes }) {
   const [cash, setCash] = useState('')
+  const [portfolioValue, setPortfolioValue] = useState('')
+  const [showHoldings, setShowHoldings] = useState(false)
+  const [currentValues, setCurrentValues] = useState({})
   const [plan, setPlan] = useState(null)
 
+  const cashCAD = parseFloat(cash) || 0
+  const portfolioCAD = parseFloat(portfolioValue) || 0
+  const totalCAD = portfolioCAD + cashCAD
+
   const handleCalculate = () => {
-    const cashCAD = parseFloat(cash)
-    if (!cashCAD || cashCAD <= 0) return
+    if (cashCAD <= 0) return
     setPlan(computeBuyPlan(cashCAD, FX_USD_TO_CAD, quotes))
   }
 
@@ -23,27 +29,65 @@ export default function BuyMode({ quotes }) {
           onChange={(e) => setCash(e.target.value)}
           className="buy-input"
         />
+        <input
+          type="number"
+          inputMode="decimal"
+          placeholder="Current portfolio value (CAD)"
+          value={portfolioValue}
+          onChange={(e) => setPortfolioValue(e.target.value)}
+          className="buy-input"
+        />
         <button className="refresh-btn" onClick={handleCalculate}>Calculate</button>
       </div>
 
-      {cash && parseFloat(cash) > 0 && (
+      <button className="tab-btn holdings-toggle" onClick={() => setShowHoldings((s) => !s)}>
+        {showHoldings ? 'Hide' : 'Add'} current value per holding (optional — flags 🟣 at-target)
+      </button>
+
+      {showHoldings && (
+        <div className="holdings-grid">
+          {HOLDINGS.filter((h) => (h.targetWeightPct ?? 0) > 0).map((h) => (
+            <label key={h.ticker} className="holdings-field">
+              <span>{h.ticker}</span>
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                placeholder="$0"
+                value={currentValues[h.ticker] ?? ''}
+                onChange={(e) => setCurrentValues((s) => ({ ...s, [h.ticker]: e.target.value }))}
+              />
+            </label>
+          ))}
+        </div>
+      )}
+
+      {totalCAD > 0 && (
         <div className="ref-table">
           <h2>Target Allocation Reference</h2>
-          <p className="ref-sub">What it'd cost to hit each target weight on ${parseFloat(cash).toFixed(2)} CAD, at today's prices — regardless of zone.</p>
+          <p className="ref-sub">
+            Target $ at each weight on your total of ${totalCAD.toFixed(2)} CAD
+            (${portfolioCAD.toFixed(2)} held + ${cashCAD.toFixed(2)} this round) —
+            shares shown are this round's worth at today's prices, regardless of zone.
+          </p>
           {HOLDINGS.filter((h) => (h.targetWeightPct ?? 0) > 0).map((h) => {
             const quote = quotes[h.ticker]
             const price = quote?.price ?? null
             const zone = getZone(price, h, quote)
-            const targetCAD = parseFloat(cash) * h.targetWeightPct
+            const targetCAD = totalCAD * h.targetWeightPct
+            const cashTargetCAD = cashCAD * h.targetWeightPct
             const priceCAD = price != null ? price * FX_USD_TO_CAD : null
-            const sharesNeeded = priceCAD != null ? Math.floor(targetCAD / priceCAD) : null
+            const sharesNeeded = priceCAD != null ? Math.floor(cashTargetCAD / priceCAD) : null
+            const currentCAD = parseFloat(currentValues[h.ticker]) || 0
+            const atTarget = targetCAD > 0 && currentCAD >= targetCAD
             return (
               <div key={h.ticker} className="ref-row">
-                <span className={`ticker zone-${zone.color}`}>{h.ticker}</span>
+                <span className={`ticker zone-${atTarget ? 'purple' : zone.color}`}>{h.ticker}</span>
                 <span className="ref-pct">{(h.targetWeightPct * 100).toFixed(0)}%</span>
                 <span className="ref-cad">${targetCAD.toFixed(2)}</span>
                 <span className="ref-shares">{sharesNeeded != null ? `${sharesNeeded} sh` : '—'}</span>
                 <span className={`zone-badge zone-${zone.color}`}>{zone.label}</span>
+                {atTarget && <span className="zone-badge zone-purple">At target</span>}
               </div>
             )
           })}
@@ -52,10 +96,15 @@ export default function BuyMode({ quotes }) {
 
       {plan && (
         <div className="cards">
-          {plan.rows.map((row) => (
-            <div key={row.ticker} className={`card zone-${row.zone.color}`}>
+          {plan.rows.map((row) => {
+            const targetCAD = totalCAD * (HOLDINGS.find((h) => h.ticker === row.ticker)?.targetWeightPct ?? 0)
+            const currentCAD = parseFloat(currentValues[row.ticker]) || 0
+            const atTarget = targetCAD > 0 && currentCAD >= targetCAD
+            const cardColor = atTarget && row.zone.color !== 'green' ? 'purple' : row.zone.color
+            return (
+            <div key={row.ticker} className={`card zone-${cardColor}`}>
               <div className="card-top">
-                <span className={`ticker zone-${row.zone.color}`}>{row.ticker}</span>
+                <span className={`ticker zone-${cardColor}`}>{row.ticker}</span>
                 <span className="name">{row.name}</span>
               </div>
               <div className="price-row">
@@ -63,6 +112,7 @@ export default function BuyMode({ quotes }) {
                   {row.status === 'buy' ? `${row.shares} share${row.shares === 1 ? '' : 's'}` : 'Skip this round'}
                 </span>
                 <span className={`zone-badge zone-${row.zone.color}`}>{row.zone.label}</span>
+                {atTarget && <span className="zone-badge zone-purple">At target</span>}
               </div>
               <div className="card-footer">
                 <span>
@@ -73,7 +123,8 @@ export default function BuyMode({ quotes }) {
               </div>
               {row.note && <div className="buy-note">{row.note}</div>}
             </div>
-          ))}
+            )
+          })}
 
           <div className="card opportunity-card">
             <div className="card-top">
