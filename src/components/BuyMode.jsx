@@ -25,7 +25,7 @@ export default function BuyMode({ quotes }) {
 
   const handleCalculate = () => {
     if (cashCAD <= 0) return
-    setPlan(computeBuyPlan(cashCAD, FX_USD_TO_CAD, quotes))
+    setPlan(computeBuyPlan(cashCAD, FX_USD_TO_CAD, quotes, currentValuesCAD, totalCAD))
   }
 
   return (
@@ -90,12 +90,12 @@ export default function BuyMode({ quotes }) {
             const atTarget = targetCAD > 0 && currentCAD >= targetCAD
             return (
               <div key={h.ticker} className="ref-row">
-                <span className={`ticker zone-${atTarget ? 'purple' : zone.color}`}>{h.ticker}</span>
+                <span className={`ticker zone-${zone.color}`}>{h.ticker}</span>
                 <span className="ref-pct">{(h.targetWeightPct * 100).toFixed(0)}%</span>
                 <span className="ref-cad">${targetCAD.toFixed(2)}</span>
                 <span className="ref-shares">{sharesNeeded != null ? `${sharesNeeded} sh` : '—'}</span>
                 <span className={`zone-badge zone-${zone.color}`}>{zone.label}</span>
-                {atTarget && <span className="zone-badge zone-purple">At target</span>}
+                {atTarget && <span className="zone-badge zone-purple">At target — optional</span>}
               </div>
             )
           })}
@@ -104,15 +104,10 @@ export default function BuyMode({ quotes }) {
 
       {plan && (
         <div className="cards">
-          {plan.rows.map((row) => {
-            const targetCAD = totalCAD * (HOLDINGS.find((h) => h.ticker === row.ticker)?.targetWeightPct ?? 0)
-            const currentCAD = currentValuesCAD[row.ticker] ?? 0
-            const atTarget = targetCAD > 0 && currentCAD >= targetCAD
-            const cardColor = atTarget && row.zone.color !== 'green' ? 'purple' : row.zone.color
-            return (
-            <div key={row.ticker} className={`card zone-${cardColor}`}>
+          {plan.rows.map((row) => (
+            <div key={row.ticker} className={`card zone-${row.zone.color}${row.atTarget ? ' at-target-trim' : ''}`}>
               <div className="card-top">
-                <span className={`ticker zone-${cardColor}`}>{row.ticker}</span>
+                <span className={`ticker zone-${row.zone.color}`}>{row.ticker}</span>
                 <span className="name">{row.name}</span>
               </div>
               <div className="price-row">
@@ -120,7 +115,7 @@ export default function BuyMode({ quotes }) {
                   {row.status === 'buy' ? `${row.shares} share${row.shares === 1 ? '' : 's'}` : 'Skip this round'}
                 </span>
                 <span className={`zone-badge zone-${row.zone.color}`}>{row.zone.label}</span>
-                {atTarget && <span className="zone-badge zone-purple">At target</span>}
+                {row.atTarget && <span className="zone-badge zone-purple">At target — optional</span>}
               </div>
               <div className="card-footer">
                 <span>
@@ -131,8 +126,7 @@ export default function BuyMode({ quotes }) {
               </div>
               {row.note && <div className="buy-note">{row.note}</div>}
             </div>
-            )
-          })}
+          ))}
 
           <div className="card opportunity-card">
             <div className="card-top">

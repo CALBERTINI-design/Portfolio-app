@@ -1,21 +1,27 @@
 import { HOLDINGS, getZone } from './portfolio'
 
-// Allocation per CLAUDE.md section 4, simplified.
+// Allocation per CLAUDE.md section 4.
 //
-// The Target Allocation Reference (cash * targetWeightPct) is always the
-// basis for sizing — it does not change with zone/score. What changes is
-// whether that allocation is actually worth buying right now:
+// currentValuesCAD / totalCAD (optional, from shares held entered in Buy
+// Mode) refine the buy suggestion as you approach your target weight:
+//
+// - room = max(totalCAD * targetWeightPct - currentValueCAD, 0) — how much
+//   $ is left before this holding hits its overall target allocation.
+// - The suggested buy is min(cashCAD * targetWeightPct, room) — so as a
+//   holding gets close to its target %, the suggestion shrinks to fit
+//   whatever's left, rather than always suggesting the full cash slice.
+// - If room is already 0, the holding is flagged `atTarget: true`. The UI
+//   shows this as a purple trim/border around the card, on top of its
+//   normal zone color — so you still see "this is a 🟢 buy if you want to
+//   diversify further," you just also know you've hit your target % and
+//   any further buy here is optional/over-target.
 //
 // - score >= 1.5 (🟢 Aggressive Buy, or upper 🟡 Safe Entry — excludes the
 //   bottom third of the yellow range): buy the whole shares that fit the
 //   target $ allocation for this round.
 // - score < 1.5 (lower 🟡 or 🔴 Wait) or no live price: skipped this
 //   round — its target $ allocation rolls to opportunity cash instead.
-//
-// This does NOT assume all cash gets spent — only what's currently worth
-// allocating does. Remaining cash (skipped allocations + whole-share
-// rounding remainders) becomes opportunity cash.
-export function computeBuyPlan(cashCAD, fx, quotes) {
+export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, totalCAD = cashCAD) {
   const rows = []
   let spent = 0
 
@@ -27,9 +33,12 @@ export function computeBuyPlan(cashCAD, fx, quotes) {
     const price = quote?.price ?? null
     const zone = getZone(price, holding, quote)
     const targetCAD = cashCAD * targetWeightPct
+    const overallTargetCAD = totalCAD * targetWeightPct
+    const currentCAD = currentValuesCAD[holding.ticker] ?? 0
+    const atTarget = overallTargetCAD > 0 && currentCAD >= overallTargetCAD
 
     if (price == null) {
-      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, status: 'skip', note: 'No live price' })
+      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'No live price' })
       continue
     }
 
@@ -37,11 +46,13 @@ export function computeBuyPlan(cashCAD, fx, quotes) {
     const nearGreen = zone.score >= 1.5
 
     if (!nearGreen) {
-      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, status: 'skip', note: 'Score below 1.5 — allocation rolls to opportunity cash' })
+      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'Score below 1.5 — allocation rolls to opportunity cash' })
       continue
     }
 
-    const shares = Math.floor(targetCAD / priceCAD)
+    const room = Math.max(overallTargetCAD - currentCAD, 0)
+    const allocCAD = Math.min(targetCAD, room)
+    const shares = Math.floor(allocCAD / priceCAD)
     const cadSpent = shares * priceCAD
     spent += cadSpent
 
@@ -53,8 +64,13 @@ export function computeBuyPlan(cashCAD, fx, quotes) {
       cadSpent,
       pctOfCash: cashCAD > 0 ? (cadSpent / cashCAD) * 100 : 0,
       targetCAD,
+      atTarget,
       status: 'buy',
-      note: shares === 0 ? 'In zone, but allocation too small for 1 whole share' : null,
+      note: shares === 0
+        ? (room < targetCAD
+          ? 'Approaching overall target allocation — remaining room too small for 1 whole share'
+          : 'In zone, but allocation too small for 1 whole share')
+        : null,
     })
   }
 

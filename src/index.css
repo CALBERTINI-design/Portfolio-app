@@ -88,6 +88,11 @@ html, body, #root {
   margin-bottom: 16px;
 }
 
+.at-target-trim {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
 .portfolio-value-row {
   font-family: 'IBM Plex Mono', monospace;
   color: var(--teal);
