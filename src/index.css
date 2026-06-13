@@ -57,6 +57,67 @@ html, body, #root {
   color: var(--text-dim);
 }
 
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tab-btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: var(--teal);
+  border-color: var(--teal);
+  background: rgba(57, 198, 192, 0.08);
+}
+
+.buy-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.buy-input {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.buy-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.opportunity-card {
+  border-left-color: var(--copper);
+}
+.opportunity-card .ticker {
+  color: var(--copper-bright);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.opportunity-card .price {
+  color: var(--copper-bright);
+}
+
 .refresh-btn {
   font-family: var(--font-display);
   font-weight: 600;

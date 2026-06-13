@@ -11,8 +11,8 @@ export const HOLDINGS = [
   { ticker: 'ANET', name: 'Arista Networks', layer: 'Digital Infrastructure', tier: 'core', aggressive: 145, safe: 165 },
   { ticker: 'SYM', name: 'Symbotic', layer: 'Robotics & Automation', tier: 'core', aggressive: 40, safe: 55 },
   { ticker: 'TER', name: 'Teradyne', layer: 'Robotics & Automation', tier: 'core', aggressive: 300, safe: 370 },
-  { ticker: 'CBRS', name: 'Cerebras', layer: 'AI Compute', tier: 'speculative', aggressive: 200, safe: 260 },
-  { ticker: 'IONQ', name: 'IonQ', layer: 'Quantum', tier: 'speculative', aggressive: 40, safe: 55 },
+  { ticker: 'CBRS', name: 'Cerebras', layer: 'AI Compute', tier: 'speculative', aggressive: 200, safe: 260, buyRoundCapPct: 0.08 },
+  { ticker: 'IONQ', name: 'IonQ', layer: 'Quantum', tier: 'speculative', aggressive: 40, safe: 55, buyRoundCapPct: 0.05 },
 ]
 
 export const WATCHLIST = ['RGTI', 'QBTS', 'MRVL']

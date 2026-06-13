@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from 'react'
 import { HOLDINGS } from './config/portfolio'
 import HoldingCard from './components/HoldingCard'
+import BuyMode from './components/BuyMode'
 
 export default function App() {
   const [quotes, setQuotes] = useState({})
   const [updatedAt, setUpdatedAt] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [mode, setMode] = useState('price')
 
   const fetchPrices = useCallback(async () => {
     setLoading(true)
@@ -37,6 +39,14 @@ export default function App() {
         <div className="meta">
           {updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString()}` : loading ? 'Loading…' : 'Not loaded'}
         </div>
+        <div className="mode-tabs">
+          <button className={`tab-btn ${mode === 'price' ? 'active' : ''}`} onClick={() => setMode('price')}>
+            Price Check
+          </button>
+          <button className={`tab-btn ${mode === 'buy' ? 'active' : ''}`} onClick={() => setMode('buy')}>
+            Buy Mode
+          </button>
+        </div>
         <button className="refresh-btn" onClick={fetchPrices} disabled={loading}>
           {loading ? 'Refreshing…' : 'Refresh prices'}
         </button>
@@ -44,18 +54,24 @@ export default function App() {
 
       {error && <div className="error-banner">Couldn't load prices: {error}</div>}
 
-      <div className="cards">
-        {HOLDINGS.map((holding) => (
-          <HoldingCard key={holding.ticker} holding={holding} quote={quotes[holding.ticker]} />
-        ))}
-      </div>
+      {mode === 'price' ? (
+        <>
+          <div className="cards">
+            {HOLDINGS.map((holding) => (
+              <HoldingCard key={holding.ticker} holding={holding} quote={quotes[holding.ticker]} />
+            ))}
+          </div>
 
-      <div className="guardrails">
-        <h2>Guardrails</h2>
-        Target levels are planning guides, not predictions or guarantees. Prices are
-        in USD. Informational only, not financial advice. Verify live price before
-        placing any order in CIBC Investor Edge.
-      </div>
+          <div className="guardrails">
+            <h2>Guardrails</h2>
+            Target levels are planning guides, not predictions or guarantees. Prices are
+            in USD. Informational only, not financial advice. Verify live price before
+            placing any order in CIBC Investor Edge.
+          </div>
+        </>
+      ) : (
+        <BuyMode quotes={quotes} />
+      )}
     </>
   )
 }
