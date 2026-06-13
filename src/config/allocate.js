@@ -6,10 +6,11 @@ import { HOLDINGS, getZone } from './portfolio'
 // basis for sizing — it does not change with zone/score. What changes is
 // whether that allocation is actually worth buying right now:
 //
-// - 🟢 Aggressive Buy (score >= 3) or 🟡 "near green" (score >= 2): buy the
-//   whole shares that fit the target $ allocation for this round.
-// - Everything else (lower 🟡, 🔴, or no live price): skipped this round —
-//   its target $ allocation rolls to opportunity cash instead.
+// - score >= 1.75 (🟢 Aggressive Buy, or upper 🟡 Safe Entry — excludes the
+//   bottom third of the yellow range): buy the whole shares that fit the
+//   target $ allocation for this round.
+// - score < 1.75 (lower 🟡 or 🔴 Wait) or no live price: skipped this
+//   round — its target $ allocation rolls to opportunity cash instead.
 //
 // This does NOT assume all cash gets spent — only what's currently worth
 // allocating does. Remaining cash (skipped allocations + whole-share
@@ -33,10 +34,10 @@ export function computeBuyPlan(cashCAD, fx, quotes) {
     }
 
     const priceCAD = price * fx
-    const nearGreen = zone.color === 'green' || (zone.color === 'yellow' && zone.score >= 2)
+    const nearGreen = zone.score >= 1.75
 
     if (!nearGreen) {
-      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, status: 'skip', note: 'Not in 🟢/near-🟡 right now — allocation rolls to opportunity cash' })
+      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, status: 'skip', note: 'Score below 1.75 — allocation rolls to opportunity cash' })
       continue
     }
 
