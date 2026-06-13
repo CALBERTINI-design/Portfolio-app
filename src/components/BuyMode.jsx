@@ -123,6 +123,7 @@ export default function BuyMode({ quotes }) {
                     ? `$${row.cadSpent.toFixed(2)} CAD · ${row.pctOfCash.toFixed(1)}% of cash (target $${row.targetCAD.toFixed(2)})`
                     : `Target $${row.targetCAD.toFixed(2)} — not allocated this round`}
                 </span>
+                <span>Score {row.zone.score ?? '—'}/4.5</span>
               </div>
               {row.note && <div className="buy-note">{row.note}</div>}
             </div>

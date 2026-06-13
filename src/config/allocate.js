@@ -10,11 +10,12 @@ import { HOLDINGS, getZone } from './portfolio'
 // - The suggested buy is min(cashCAD * targetWeightPct, room) — so as a
 //   holding gets close to its target %, the suggestion shrinks to fit
 //   whatever's left, rather than always suggesting the full cash slice.
-// - If room is already 0, the holding is flagged `atTarget: true`. The UI
-//   shows this as a purple trim/border around the card, on top of its
-//   normal zone color — so you still see "this is a 🟢 buy if you want to
-//   diversify further," you just also know you've hit your target % and
-//   any further buy here is optional/over-target.
+// - If room is too small to buy even 1 more whole share, the holding is
+//   flagged `atTarget: true`. The UI shows this as a purple trim/border
+//   around the card, on top of its normal zone color — so you still see
+//   "this is a 🟢 buy if you want to diversify further," you just also
+//   know you've effectively hit your target % and any further buy here
+//   is optional/over-target.
 //
 // - score >= 1.5 (🟢 Aggressive Buy, or upper 🟡 Safe Entry — excludes the
 //   bottom third of the yellow range): buy the whole shares that fit the
@@ -35,14 +36,16 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
     const targetCAD = cashCAD * targetWeightPct
     const overallTargetCAD = totalCAD * targetWeightPct
     const currentCAD = currentValuesCAD[holding.ticker] ?? 0
-    const atTarget = overallTargetCAD > 0 && currentCAD >= overallTargetCAD
+    const room = Math.max(overallTargetCAD - currentCAD, 0)
 
     if (price == null) {
+      const atTarget = overallTargetCAD > 0 && room <= 0
       rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'No live price' })
       continue
     }
 
     const priceCAD = price * fx
+    const atTarget = overallTargetCAD > 0 && room < priceCAD
     const nearGreen = zone.score >= 1.5
 
     if (!nearGreen) {
@@ -50,7 +53,6 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
       continue
     }
 
-    const room = Math.max(overallTargetCAD - currentCAD, 0)
     const allocCAD = Math.min(targetCAD, room)
     const shares = Math.floor(allocCAD / priceCAD)
     const cadSpent = shares * priceCAD
@@ -67,8 +69,8 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
       atTarget,
       status: 'buy',
       note: shares === 0
-        ? (room < targetCAD
-          ? 'Approaching overall target allocation — remaining room too small for 1 whole share'
+        ? (atTarget
+          ? 'At/near overall target allocation — remaining room too small for 1 whole share'
           : 'In zone, but allocation too small for 1 whole share')
         : null,
     })
