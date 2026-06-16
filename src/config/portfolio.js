@@ -10,19 +10,16 @@ export const FX_USD_TO_CAD = 1.36
 // Weights sum to ~82%; the remaining ~18% plus whole-share rounding
 // remainders roll to opportunity cash. Editable as the thesis evolves.
 export const HOLDINGS = [
-  { ticker: 'ETN', name: 'Eaton', layer: 'Power & Energy', tier: 'core', targetWeightPct: 0.12 },
-  { ticker: 'CEG', name: 'Constellation Energy', layer: 'Power & Energy', tier: 'core', targetWeightPct: 0.12 },
-  { ticker: 'PWR', name: 'Quanta Services', layer: 'Grid & Infrastructure', tier: 'core', targetWeightPct: 0 },
-  { ticker: 'MTZ', name: 'MasTec', layer: 'Grid & Infrastructure', tier: 'core', targetWeightPct: 0.12 },
-  { ticker: 'VRT', name: 'Vertiv', layer: 'Digital Infrastructure', tier: 'core', targetWeightPct: 0.07 },
-  { ticker: 'ANET', name: 'Arista Networks', layer: 'Digital Infrastructure', tier: 'core', targetWeightPct: 0.12 },
-  { ticker: 'SYM', name: 'Symbotic', layer: 'Robotics & Automation', tier: 'core', targetWeightPct: 0.07 },
-  { ticker: 'TER', name: 'Teradyne', layer: 'Robotics & Automation', tier: 'core', targetWeightPct: 0.07 },
-  { ticker: 'CBRS', name: 'Cerebras', layer: 'AI Compute', tier: 'speculative', targetWeightPct: 0.08 },
-  { ticker: 'IONQ', name: 'IonQ', layer: 'Quantum', tier: 'speculative', targetWeightPct: 0.05 },
+  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'AI & Power Infrastructure', tier: 'core', targetWeightPct: 0.25 },
+  { ticker: 'SYM',  name: 'Symbotic',  layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15 },
+  { ticker: 'TER',  name: 'Teradyne',  layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15 },
+  { ticker: 'CBRS', name: 'Cerebras',  layer: 'AI Compute',            tier: 'speculative', targetWeightPct: 0.15 },
+  { ticker: 'IONQ', name: 'IonQ',      layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.10 },
+  { ticker: 'QBTS', name: 'D-Wave Quantum', layer: 'Quantum',          tier: 'speculative', targetWeightPct: 0.10 },
+  { ticker: 'RGTI', name: 'Rigetti Computing', layer: 'Quantum',       tier: 'speculative', targetWeightPct: 0.10 },
 ]
 
-export const WATCHLIST = ['RGTI', 'QBTS', 'MRVL']
+export const WATCHLIST = ['MRVL', 'NVDA', 'PLTR']
 
 // Zone is purely relative — no fixed $ thresholds. Four lenses, weighted by
 // how reliable/strong a signal each one is for a multi-year accumulation:
