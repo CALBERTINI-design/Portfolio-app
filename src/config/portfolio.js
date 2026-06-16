@@ -10,13 +10,14 @@ export const FX_USD_TO_CAD = 1.36
 // Weights sum to ~82%; the remaining ~18% plus whole-share rounding
 // remainders roll to opportunity cash. Editable as the thesis evolves.
 export const HOLDINGS = [
-  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'AI & Power Infrastructure', tier: 'core', targetWeightPct: 0.25 },
-  { ticker: 'SYM',  name: 'Symbotic',  layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15 },
-  { ticker: 'TER',  name: 'Teradyne',  layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15 },
-  { ticker: 'CBRS', name: 'Cerebras',  layer: 'AI Compute',            tier: 'speculative', targetWeightPct: 0.15 },
-  { ticker: 'IONQ', name: 'IonQ',      layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.10 },
-  { ticker: 'QBTS', name: 'D-Wave Quantum', layer: 'Quantum',          tier: 'speculative', targetWeightPct: 0.10 },
-  { ticker: 'RGTI', name: 'Rigetti Computing', layer: 'Quantum',       tier: 'speculative', targetWeightPct: 0.10 },
+  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.23 },
+  { ticker: 'DRAM', name: 'DRAM ETF',                      layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.16 },
+  { ticker: 'SYM',  name: 'Symbotic',                      layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.16 },
+  { ticker: 'TER',  name: 'Teradyne',                      layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.14 },
+  { ticker: 'CBRS', name: 'Cerebras',                      layer: 'AI Compute',            tier: 'speculative', targetWeightPct: 0.09 },
+  { ticker: 'IONQ', name: 'IonQ',                          layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.08 },
+  { ticker: 'QBTS', name: 'D-Wave Quantum',                layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.07 },
+  { ticker: 'RGTI', name: 'Rigetti Computing',             layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.07 },
 ]
 
 export const WATCHLIST = ['MRVL', 'NVDA', 'PLTR']
