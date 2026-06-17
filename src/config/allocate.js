@@ -46,10 +46,10 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
 
     const priceCAD = price * fx
     const atTarget = overallTargetCAD > 0 && room < priceCAD
-    const nearGreen = zone.score >= 1.5
+    const nearGreen = zone.score >= 6
 
     if (!nearGreen) {
-      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'Score below 1.5 — allocation rolls to opportunity cash' })
+      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'Score below 6 (Wait/Hold Minimal) — allocation rolls to opportunity cash' })
       continue
     }
 

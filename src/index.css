@@ -7,6 +7,7 @@
   --teal: #39c6c0;
   --green: #3ec77a;
   --yellow: #e7b84b;
+  --orange: #e8924a;
   --red: #e0644f;
   --purple: #b08af0;
   --text: #e7ecf3;
@@ -249,6 +250,7 @@ html, body, #root {
 
 .card.zone-green { border-left-color: var(--green); }
 .card.zone-yellow { border-left-color: var(--yellow); }
+.card.zone-orange { border-left-color: var(--orange); }
 .card.zone-red { border-left-color: var(--red); }
 .card.zone-unknown { border-left-color: var(--text-dim); }
 .card.zone-purple { border-left-color: var(--purple); }
@@ -268,6 +270,7 @@ html, body, #root {
 
 .ticker.zone-green { color: var(--green); }
 .ticker.zone-yellow { color: var(--yellow); }
+.ticker.zone-orange { color: var(--orange); }
 .ticker.zone-red { color: var(--red); }
 .ticker.zone-unknown { color: var(--text-dim); }
 .ticker.zone-purple { color: var(--purple); }
@@ -309,6 +312,7 @@ html, body, #root {
 }
 .zone-badge.zone-green { background: rgba(62, 199, 122, 0.15); color: var(--green); }
 .zone-badge.zone-yellow { background: rgba(231, 184, 75, 0.15); color: var(--yellow); }
+.zone-badge.zone-orange { background: rgba(232, 146, 74, 0.15); color: var(--orange); }
 .zone-badge.zone-red { background: rgba(224, 100, 79, 0.15); color: var(--red); }
 .zone-badge.zone-unknown { background: rgba(139, 150, 168, 0.15); color: var(--text-dim); }
 .zone-badge.zone-purple { background: rgba(176, 138, 240, 0.15); color: var(--purple); }

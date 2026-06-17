@@ -73,7 +73,7 @@ export default function HoldingCard({ holding, quote }) {
       </div>
 
       <div className="card-footer">
-        <span>Score {zone.score ?? '—'}/4.5</span>
+        <span>Score {zone.score ?? '—'}/10</span>
         {quote?.analystTarget != null && <span>Target ${quote.analystTarget.toFixed(0)}</span>}
       </div>
 
