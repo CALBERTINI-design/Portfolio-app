@@ -49,6 +49,7 @@ export default function HoldingCard({ holding, quote }) {
       <div className="card-top">
         <span className={`ticker zone-${zone.color}`}>{holding.ticker}</span>
         <span className="name">{holding.name}</span>
+        <span className="layer-tag">{holding.layer}</span>
       </div>
 
       <div className="price-row">

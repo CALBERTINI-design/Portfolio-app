@@ -281,6 +281,14 @@ html, body, #root {
   font-weight: 500;
 }
 
+.layer-tag {
+  font-size: 0.68rem;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  margin-left: auto;
+  opacity: 0.8;
+}
+
 .price-row {
   display: flex;
   align-items: baseline;

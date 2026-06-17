@@ -7,7 +7,7 @@ export const FX_USD_TO_CAD = 1.38
 // update when conviction changes. Used as one of the 5 scoring lenses.
 export const HOLDINGS = [
   { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.35,  thesisFit: 10 },
-  { ticker: 'SETM', name: 'Strive Energy ETF',             layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.30,  thesisFit: 8  },
+  { ticker: 'SETM', name: 'Sprott Critical Materials ETF',  layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.30,  thesisFit: 8  },
   { ticker: 'ZBRA', name: 'Zebra Technologies',            layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15,  thesisFit: 7  },
   { ticker: 'SYM',  name: 'Symbotic',                      layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.10,  thesisFit: 9  },
   { ticker: 'IONQ', name: 'IonQ',                          layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.034, thesisFit: 3  },
