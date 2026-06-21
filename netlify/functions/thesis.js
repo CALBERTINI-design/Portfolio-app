@@ -45,16 +45,28 @@ export async function handler() {
       return `### ${layer}\nHoldings: ${tickers}\nRecent news:\n${newsText}`
     }).join('\n\n')
 
-    const prompt = `You are reviewing an infrastructure-investing thesis for a long-term (10-year) retail investor. The thesis: own the infrastructure backbone of AI, electrification, and automation (power, grid, cooling, networking, robotics, compute) rather than betting on which AI software company wins.
+    const prompt = `You are reviewing an infrastructure-investing thesis for a long-term (10-year) retail investor in a Canadian TFSA. The thesis: own the infrastructure backbone of AI, electrification, and automation (power, grid, cooling, networking, robotics, compute) rather than betting on which AI software company wins. The investor does NOT sell within 3-5 years minimum — sell signals should only trigger on genuine thesis breaks, not short-term volatility or price drops alone.
 
 For each of the following thesis layers, using the recent news provided, assess:
 1. Overall thesis health for that layer: "strengthening", "intact", or "cracks showing"
 2. A 2-3 sentence summary of what's helping or hurting the thesis, citing specific news where relevant
+3. For each individual holding in the layer, a sell signal:
+   - "hold" — thesis intact, continue accumulating
+   - "watch" — early warning signs, monitor closely but no action yet
+   - "reduce" — thesis weakening for this specific name, consider trimming
+   - "exit" — thesis broken for this name, genuine reason to sell regardless of price
 
 ${layerSections}
 
 Respond ONLY with a JSON array, one object per layer, in this exact shape:
-[{"layer": "...", "health": "strengthening|intact|cracks showing", "summary": "..."}]`
+[{
+  "layer": "...",
+  "health": "strengthening|intact|cracks showing",
+  "summary": "...",
+  "holdings": [
+    {"ticker": "...", "sellSignal": "hold|watch|reduce|exit", "sellNote": "one sentence reason"}
+  ]
+}]`
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

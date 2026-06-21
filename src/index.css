@@ -393,6 +393,54 @@ html, body, #root {
   margin: 0 0 6px;
 }
 
+.thesis-intro p {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.thesis-updated {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.thesis-summary {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 8px 0 10px;
+}
+
+.sell-signals {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sell-signal-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sell-signal-row .ticker {
+  font-size: 0.88rem;
+  min-width: 48px;
+}
+
+.sell-note {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+  flex: 1;
+}
+
 .error-banner {
   background: rgba(224, 100, 79, 0.12);
   border: 1px solid var(--red);

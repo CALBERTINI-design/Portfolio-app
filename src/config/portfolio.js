@@ -6,13 +6,13 @@ export const FX_USD_TO_CAD = 1.38
 // AI/electrification/automation infrastructure thesis. Set manually here,
 // update when conviction changes. Used as one of the 5 scoring lenses.
 export const HOLDINGS = [
-  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.35,  thesisFit: 10, isETF: true },
-  { ticker: 'SETM', name: 'Sprott Critical Materials ETF',  layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.30,  thesisFit: 8,  isETF: true },
-  { ticker: 'ZBRA', name: 'Zebra Technologies',            layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.15,  thesisFit: 7  },
-  { ticker: 'SYM',  name: 'Symbotic',                      layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.10,  thesisFit: 9  },
-  { ticker: 'IONQ', name: 'IonQ',                          layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.034, thesisFit: 3  },
-  { ticker: 'QBTS', name: 'D-Wave Quantum',                layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.033, thesisFit: 3  },
-  { ticker: 'RGTI', name: 'Rigetti Computing',             layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.033, thesisFit: 3  },
+  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.32,  thesisFit: 10, isETF: true },
+  { ticker: 'SETM', name: 'Sprott Critical Materials ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.23,  thesisFit: 8,  isETF: true },
+  { ticker: 'ZBRA', name: 'Zebra Technologies',            layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.10,  thesisFit: 7  },
+  { ticker: 'SYM',  name: 'Symbotic',                      layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.12,  thesisFit: 9  },
+  { ticker: 'IONQ', name: 'IonQ',                          layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.11,  thesisFit: 3  },
+  { ticker: 'QBTS', name: 'D-Wave Quantum',                layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.07,  thesisFit: 3  },
+  { ticker: 'RGTI', name: 'Rigetti Computing',             layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.05,  thesisFit: 3  },
 ]
 
 export const WATCHLIST = ['MRVL', 'NVDA', 'PLTR']

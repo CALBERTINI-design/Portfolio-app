@@ -7,6 +7,20 @@ const HEALTH_COLOR = {
   'cracks showing': 'red',
 }
 
+const SELL_SIGNAL_COLOR = {
+  hold:   'green',
+  watch:  'yellow',
+  reduce: 'orange',
+  exit:   'red',
+}
+
+const SELL_SIGNAL_LABEL = {
+  hold:   'Hold — accumulate',
+  watch:  'Watch closely',
+  reduce: 'Consider reducing',
+  exit:   'Thesis broken — exit',
+}
+
 export default function ThesisMode() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -36,8 +50,8 @@ export default function ThesisMode() {
         <p>
           Pulls recent news per thesis layer and asks Claude whether each part
           of the infrastructure thesis is strengthening, intact, or showing
-          cracks. This is the only mode that costs an LLM call — runs only
-          when you tap the button below.
+          cracks — and whether any individual holding warrants a sell signal.
+          Runs only when you tap the button below.
         </p>
         <button className="refresh-btn" onClick={runReview} disabled={loading}>
           {loading ? 'Reviewing… (this can take ~30s)' : 'Run Thesis Review'}
@@ -62,6 +76,21 @@ export default function ThesisMode() {
                     <span className={`zone-badge zone-${color}`}>{layer.health}</span>
                   </div>
                   <p className="thesis-summary">{layer.summary}</p>
+
+                  {Array.isArray(layer.holdings) && layer.holdings.length > 0 && (
+                    <div className="sell-signals">
+                      {layer.holdings.map((h) => {
+                        const sc = SELL_SIGNAL_COLOR[h.sellSignal] ?? 'unknown'
+                        return (
+                          <div key={h.ticker} className="sell-signal-row">
+                            <span className={`ticker zone-${sc}`}>{h.ticker}</span>
+                            <span className={`zone-badge zone-${sc}`}>{SELL_SIGNAL_LABEL[h.sellSignal] ?? h.sellSignal}</span>
+                            <span className="sell-note">{h.sellNote}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               )
             })}
@@ -71,9 +100,10 @@ export default function ThesisMode() {
 
       <div className="guardrails">
         <h2>Guardrails</h2>
-        This read is only as good as the news fed to it (last 7 days, per
-        holding) — it's not a replacement for deliberate human review at major
-        inflection points. Informational only, not financial advice.
+        Sell signals are based on recent news only — not a replacement for
+        deliberate human review. "Exit" signals should only be acted on if
+        the thesis is genuinely broken, not due to short-term price drops.
+        Informational only, not financial advice. Minimum hold 3-5 years.
       </div>
     </div>
   )
