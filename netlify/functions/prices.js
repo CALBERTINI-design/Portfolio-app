@@ -1,5 +1,5 @@
 // Netlify serverless function — proxies Finnhub so the API key stays server-side.
-const TICKERS = ['AIPO', 'SETM', 'ZBRA', 'SYM', 'IONQ', 'QBTS', 'RGTI']
+const TICKERS = ['AIPO', 'SETM', 'LEU', 'IONQ', 'QBTS', 'RGTI', 'SYM']
 
 async function safeJson(res) {
   if (!res.ok) return null
@@ -10,8 +10,6 @@ async function safeJson(res) {
   }
 }
 
-// Average earnings surprise % over the last 4 reported quarters — a rough
-// proxy for whether the business is executing, relevant to a multi-year thesis.
 async function fetchEarningsTrend(ticker, key) {
   const res = await fetch(`https://finnhub.io/api/v1/stock/earnings?symbol=${ticker}&token=${key}`)
   const data = await safeJson(res)
@@ -22,26 +20,6 @@ async function fetchEarningsTrend(ticker, key) {
 
   const avg = recent.reduce((sum, q) => sum + q.surprisePercent, 0) / recent.length
   return { avgSurprisePct: avg, quarters: recent.length }
-}
-
-// How the stock's daily move compares to its closest peers — a short-term
-// sector-strength signal, shown alongside the longer-term earnings trend.
-async function fetchSectorStrength(ticker, ownChange, key) {
-  const peersRes = await fetch(`https://finnhub.io/api/v1/stock/peers?symbol=${ticker}&token=${key}`)
-  const peers = await safeJson(peersRes)
-  if (!Array.isArray(peers)) return null
-
-  const peerTickers = peers.filter((p) => p !== ticker).slice(0, 3)
-  if (peerTickers.length === 0 || ownChange == null) return null
-
-  const peerQuotes = await Promise.all(
-    peerTickers.map((p) => fetch(`https://finnhub.io/api/v1/quote?symbol=${p}&token=${key}`).then(safeJson))
-  )
-  const peerChanges = peerQuotes.map((q) => q?.dp).filter((dp) => typeof dp === 'number')
-  if (peerChanges.length === 0) return null
-
-  const peerAvg = peerChanges.reduce((sum, dp) => sum + dp, 0) / peerChanges.length
-  return { relativeStrength: ownChange - peerAvg, peerCount: peerChanges.length }
 }
 
 export async function handler() {
@@ -59,24 +37,20 @@ export async function handler() {
           fetch(`https://finnhub.io/api/v1/stock/price-target?symbol=${ticker}&token=${key}`),
         ])
 
-        const quote = await quoteRes.json()
+        const quote  = await quoteRes.json()
         const metric = await metricRes.json()
         const target = targetRes.ok ? await targetRes.json() : {}
 
-        const [earningsTrend, sectorStrength] = await Promise.all([
-          fetchEarningsTrend(ticker, key),
-          fetchSectorStrength(ticker, quote.dp ?? null, key),
-        ])
+        const earningsTrend = await fetchEarningsTrend(ticker, key)
 
         return {
           ticker,
-          price: quote.c ?? null,
-          change: quote.dp ?? null,
-          weekHigh52: metric?.metric?.['52WeekHigh'] ?? null,
-          weekLow52: metric?.metric?.['52WeekLow'] ?? null,
+          price:        quote.c   ?? null,
+          change:       quote.dp  ?? null,
+          weekHigh52:   metric?.metric?.['52WeekHigh'] ?? null,
+          weekLow52:    metric?.metric?.['52WeekLow']  ?? null,
           analystTarget: target?.targetMean ?? null,
           earningsTrend,
-          sectorStrength,
         }
       })
     )
