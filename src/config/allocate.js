@@ -50,7 +50,7 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
     const smallAdd   = !accumulate && zone.score >= 6
 
     if (!accumulate && !smallAdd) {
-      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'Score below 6 (Wait/Sell) — allocation rolls to opportunity cash' })
+      rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: `${zone.label} — allocation rolls to opportunity cash` })
       continue
     }
 

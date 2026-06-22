@@ -26,10 +26,17 @@ function capexScore(holding) {
   return 2
 }
 
-function zoneFromScore(score) {
-  if (score >= 7) return { color: 'green',  label: 'Accumulate' }
-  if (score >= 5) return { color: 'yellow', label: 'Wait'       }
-  return              { color: 'red',    label: 'Sell'       }
+// 4 zones:
+// Sell      → capex cycle post-peak (overrides score) — redeploy capital
+// Accumulate → score ≥ 7, capex active
+// Wait/Hold  → score 5-6.9, capex active
+// Don't Add  → score < 5, price extended but thesis still running
+function zoneFromScore(score, holding) {
+  const cx = capexScore(holding)
+  if (cx <= 3) return { color: 'red',    label: 'Sell'        }
+  if (score >= 7) return { color: 'green',  label: 'Accumulate'  }
+  if (score >= 5) return { color: 'yellow', label: 'Safe / Small Add' }
+  return              { color: 'orange', label: "Don't Add"   }
 }
 
 function etfZone(price, holding, quote) {
@@ -80,7 +87,7 @@ function etfZone(price, holding, quote) {
   modifiers.push({ key: 'capex', value: cx })
 
   const score = Math.round(((rangeScore + drawdownScore + momentumScore + cx) / 4) * 10) / 10
-  return { ...zoneFromScore(score), score, modifiers }
+  return { ...zoneFromScore(score, holding), score, modifiers }
 }
 
 export function getZone(price, holding, quote = null) {
@@ -133,5 +140,5 @@ export function getZone(price, holding, quote = null) {
   modifiers.push({ key: 'capex', value: cx })
 
   const score = Math.round(((rangeScore + executionScore + valuationScore + cx) / 4) * 10) / 10
-  return { ...zoneFromScore(score), score, modifiers }
+  return { ...zoneFromScore(score, holding), score, modifiers }
 }
