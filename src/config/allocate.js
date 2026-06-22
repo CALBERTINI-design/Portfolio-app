@@ -46,14 +46,16 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
 
     const priceCAD = price * fx
     const atTarget = overallTargetCAD > 0 && room < priceCAD
-    const nearGreen = zone.score >= 6
+    const accumulate = zone.score >= 7
+    const smallAdd   = !accumulate && zone.score >= 6
 
-    if (!nearGreen) {
+    if (!accumulate && !smallAdd) {
       rows.push({ ticker: holding.ticker, name: holding.name, zone, shares: 0, cadSpent: 0, pctOfCash: 0, targetCAD, atTarget, status: 'skip', note: 'Score below 6 (Wait/Sell) — allocation rolls to opportunity cash' })
       continue
     }
 
-    const allocCAD = Math.min(targetCAD, room)
+    // Small add (6-6.9): cap at 50% of normal target allocation
+    const allocCAD = Math.min(smallAdd ? targetCAD * 0.5 : targetCAD, room)
     const shares = Math.floor(allocCAD / priceCAD)
     const cadSpent = shares * priceCAD
     spent += cadSpent
@@ -68,11 +70,12 @@ export function computeBuyPlan(cashCAD, fx, quotes, currentValuesCAD = {}, total
       targetCAD,
       atTarget,
       status: 'buy',
+      buyStrength: accumulate ? 'accumulate' : 'small-add',
       note: shares === 0
         ? (atTarget
           ? 'At/near overall target allocation — remaining room too small for 1 whole share'
           : 'In zone, but allocation too small for 1 whole share')
-        : null,
+        : smallAdd ? 'Borderline score — small add (50% of normal allocation)' : null,
     })
   }
 

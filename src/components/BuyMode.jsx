@@ -115,6 +115,8 @@ export default function BuyMode({ quotes }) {
                   {row.status === 'buy' ? `${row.shares} share${row.shares === 1 ? '' : 's'}` : 'Skip this round'}
                 </span>
                 <span className={`zone-badge zone-${row.zone.color}`}>{row.zone.label}</span>
+                {row.buyStrength === 'accumulate' && <span className="zone-badge zone-green">Accumulate</span>}
+                {row.buyStrength === 'small-add'  && <span className="zone-badge zone-yellow">Small Add</span>}
                 {row.atTarget && <span className="zone-badge zone-purple">At target — optional</span>}
               </div>
               <div className="card-footer">
