@@ -1,5 +1,5 @@
 // Netlify serverless function — proxies Finnhub so the API key stays server-side.
-const TICKERS = ['AIPO', 'SETM', 'LEU', 'IONQ', 'QBTS', 'RGTI', 'SYM']
+const TICKERS = ['AIPO', 'SETM', 'DRAM', 'LEU', 'IONQ', 'QBTS', 'RGTI', 'SYM', 'GEV']
 
 async function safeJson(res) {
   if (!res.ok) return null

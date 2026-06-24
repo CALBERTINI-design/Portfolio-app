@@ -5,13 +5,18 @@ export const FX_USD_TO_CAD = 1.38
 // capexPeakStart / capexPeakEnd: the expected capex cycle peak window per holding.
 // Pre-peak = accumulate aggressively. Post-peak = wait/sell and redeploy.
 export const HOLDINGS = [
-  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.35, capexPeakStart: 2026, capexPeakEnd: 2028, isETF: true },
-  { ticker: 'SETM', name: 'Sprott Critical Materials ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.35, capexPeakStart: 2026, capexPeakEnd: 2030, isETF: true },
+  { ticker: 'AIPO', name: 'AI & Power Infrastructure ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.30, capexPeakStart: 2026, capexPeakEnd: 2028, isETF: true },
+  { ticker: 'SETM', name: 'Sprott Critical Materials ETF', layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.30, capexPeakStart: 2026, capexPeakEnd: 2030, isETF: true },
+  { ticker: 'DRAM', name: 'Roundhill Memory ETF',          layer: 'ETFs',                  tier: 'core',        targetWeightPct: 0.10, capexPeakStart: 2026, capexPeakEnd: 2029, isETF: true },
   { ticker: 'LEU',  name: 'Centrus Energy Corp',           layer: 'Nuclear Energy',         tier: 'core',        targetWeightPct: 0.10, capexPeakStart: 2026, capexPeakEnd: 2029 },
   { ticker: 'IONQ', name: 'IonQ Inc',                      layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.07, capexPeakStart: 2026, capexPeakEnd: 2032 },
   { ticker: 'QBTS', name: 'D-Wave Quantum',                layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.05, capexPeakStart: 2026, capexPeakEnd: 2032 },
   { ticker: 'RGTI', name: 'Rigetti Computing',             layer: 'Quantum',               tier: 'speculative', targetWeightPct: 0.05, capexPeakStart: 2026, capexPeakEnd: 2032 },
   { ticker: 'SYM',  name: 'Symbotic Inc',                  layer: 'Robotics & Automation', tier: 'core',        targetWeightPct: 0.03, capexPeakStart: 2028, capexPeakEnd: 2033 },
+]
+
+export const WATCHLIST = [
+  { ticker: 'GEV', name: 'GE Vernova', layer: 'Power & Grid', capexPeakStart: 2026, capexPeakEnd: 2029 },
 ]
 
 function capexScore(holding) {

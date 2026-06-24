@@ -1,6 +1,6 @@
 import { getZone } from '../config/portfolio'
 
-export default function HoldingCard({ holding, quote }) {
+export default function HoldingCard({ holding, quote, watchOnly = false }) {
   const price = quote?.price ?? null
   const zone = getZone(price, holding, quote)
   const low = quote?.weekLow52 ?? null
@@ -60,6 +60,7 @@ export default function HoldingCard({ holding, quote }) {
           </span>
         )}
         <span className={`zone-badge zone-${zone.color}`}>{zone.label}</span>
+        {watchOnly && <span className="zone-badge zone-purple">Watch</span>}
       </div>
 
       <div className="range-bar">

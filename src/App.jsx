@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { HOLDINGS } from './config/portfolio'
+import { HOLDINGS, WATCHLIST } from './config/portfolio'
 import HoldingCard from './components/HoldingCard'
 import BuyMode from './components/BuyMode'
 import ThesisMode from './components/ThesisMode'
@@ -65,6 +65,17 @@ export default function App() {
               <HoldingCard key={holding.ticker} holding={holding} quote={quotes[holding.ticker]} />
             ))}
           </div>
+
+          {WATCHLIST.length > 0 && (
+            <>
+              <div className="watchlist-header">Watchlist</div>
+              <div className="cards">
+                {WATCHLIST.map((holding) => (
+                  <HoldingCard key={holding.ticker} holding={holding} quote={quotes[holding.ticker]} watchOnly />
+                ))}
+              </div>
+            </>
+          )}
 
           <div className="guardrails">
             <h2>Guardrails</h2>

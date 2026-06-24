@@ -70,6 +70,36 @@ export default function BuyMode({ quotes }) {
         </div>
       )}
 
+      {portfolioCAD > 0 && (
+        <div className="ref-table">
+          <h2>Current vs Target Allocation</h2>
+          <p className="ref-sub">Filled bar = current allocation. Line = target. Based on shares entered × live price.</p>
+          {HOLDINGS.filter((h) => (h.targetWeightPct ?? 0) > 0).map((h) => {
+            const currentCAD = currentValuesCAD[h.ticker] ?? 0
+            const currentPct = portfolioCAD > 0 ? (currentCAD / (portfolioCAD + cashCAD)) * 100 : 0
+            const targetPct  = h.targetWeightPct * 100
+            const fillPct    = Math.min((currentPct / targetPct) * 100, 100)
+            const over       = currentPct > targetPct
+            const quote      = quotes[h.ticker]
+            const price      = quote?.price ?? null
+            const zone       = getZone(price, h, quote)
+            return (
+              <div key={h.ticker} className="alloc-bar-row">
+                <span className={`ticker zone-${zone.color}`} style={{ minWidth: 48 }}>{h.ticker}</span>
+                <div className="alloc-bar-track">
+                  <div className="alloc-bar-fill" style={{ width: `${fillPct}%`, background: over ? 'var(--copper)' : 'var(--teal)' }} />
+                  <div className="alloc-bar-target" style={{ left: '100%' }} />
+                </div>
+                <span className="alloc-bar-label">
+                  {currentPct.toFixed(1)}% / {targetPct.toFixed(0)}%
+                  {over && <span style={{ color: 'var(--copper)', marginLeft: 4 }}>↑</span>}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
       {totalCAD > 0 && (
         <div className="ref-table">
           <h2>Target Allocation Reference</h2>
